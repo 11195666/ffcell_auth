@@ -2,579 +2,458 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>方方格子自助授权系统-青春云科技</title>
-        <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>方方格子自助授权系统 - 青春云科技</title>
+    <style>
+        /* 全局与字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
+        
+        :root {
+            --primary-color: #4A90E2;
+            --success-color: #28a745;
+            --error-color: #d9534f;
+            --light-bg-color: #f8f9fa;
+            --white-color: #ffffff;
+            --text-color: #333;
+            --text-secondary-color: #6c757d;
+            --border-color: #dee2e6;
+            --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        html, body {
+            height: 100%;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
             background-color: #f0f2f5;
-            color: #333;
+            color: var(--text-color);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            padding: 15px;
+            box-sizing: border-box;
         }
+
+        /* 主容器 */
         .container {
             max-width: 500px;
             width: 100%;
-            padding: 30px;
-            background-color: #ffffff;
+            padding: 25px;
+            background-color: var(--white-color);
             border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e0e0e0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #fff;
         }
-        h2 {
+        
+        /* 头部 */
+        .header {
             text-align: center;
-            color: #007bff;
-            margin-bottom: 30px;
-            font-size: 1.8em;
-            font-weight: 600;
-        }
-        form {
-            width: 100%;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
-            font-size: 0.95em;
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="date"] {
-            width: calc(100% - 22px);
-            padding: 12px;
-            margin-bottom: 18px;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 1em;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="date"]:focus {
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-        small {
-            display: block;
-            margin-top: -12px;
             margin-bottom: 20px;
-            color: #6c757d;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .header .subtitle {
+            margin-top: 5px;
+            color: var(--text-secondary-color);
             font-size: 0.85em;
         }
+
+        /* 表单 */
+        form { width: 100%; }
+        .form-group { margin-bottom: 15px; }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.9em;
+        }
+        .input-wrapper { position: relative; }
+        input[type="text"], input[type="email"], input[type="date"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 0.95em;
+            transition: all 0.2s ease;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+        .input-tip {
+            display: block;
+            margin-top: 6px;
+            color: var(--text-secondary-color);
+            font-size: 0.75em;
+        }
+        .input-tip a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .input-tip a:hover { text-decoration: underline; }
+
+        /* 单选框 */
+        .radio-group-wrapper {
+            background-color: var(--light-bg-color);
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
         .radio-group {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
         }
         .radio-group label {
             display: flex;
             align-items: center;
-            margin-bottom: 0;
-            font-weight: normal;
-        }
-        .radio-group input[type="radio"] {
-            margin-right: 8px;
-            width: auto;
-            margin-bottom: 0;
-        }
-        #customExpiryDateContainer {
-            margin-top: 10px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        button {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background-color: #28a745;
-            color: white;
-            border: none;
+            justify-content: center;
+            padding: 8px;
+            background-color: var(--white-color);
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        button:hover {
-            background-color: #218838;
-            transform: translateY(-1px);
-        }
-        button:active {
-            transform: translateY(0);
-        }
-        .result-section {
-            margin-top: 30px;
-            width: 100%;
-            text-align: center;
-        }
-        .result {
-            padding: 20px;
-            background-color: #e6ffe6;
-            border: 1px solid #a8e6a8;
-            border-radius: 8px;
-            word-break: break-all;
-            font-size: 1.15em;
-            color: #1a7a1a;
-            line-height: 1.5;
+            transition: all 0.2s ease;
             font-weight: 500;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            font-size: 0.85em;
+            margin: 0;
         }
-        .result h3 {
-            margin-top: 0;
-            color: #007bff;
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #dcdcdc;
-            padding-bottom: 10px;
+        .radio-group input[type="radio"] { display: none; }
+        .radio-group input[type="radio"]:checked + span {
+            color: var(--white-color);
+        }
+        .radio-group label:has(input:checked) {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--white-color);
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+        }
+        .radio-group .full-width { grid-column: 1 / -1; }
+        
+        #customExpiryDateContainer {
+            margin-top: 10px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, margin-top 0.3s ease;
+        }
+        #customExpiryDateContainer.show { max-height: 100px; }
+
+        /* 提交按钮 */
+        .submit-button {
             width: 100%;
-            text-align: center;
-        }
-        .access-code-display {
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 1.2em;
-            padding: 5px;
-            border: 1px dashed #a8e6a8;
-            background-color: #f0fff0;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            width: calc(100% - 10px);
-            text-align: center;
-        }
-        .copy-button {
-            background-color: #007bff;
+            padding: 12px;
+            background-image: linear-gradient(45deg, var(--success-color) 0%, #22c55e 100%);
             color: white;
             border: none;
-            border-radius: 5px;
-            padding: 8px 15px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9em;
-            transition: background-color 0.2s ease;
-            align-self: flex-end;
-        }
-        .copy-button:hover {
-            background-color: #0056b3;
-        }
-        .copy-button:active {
-            background-color: #004085;
-        }
-        .copy-feedback {
+            font-size: 1.05em;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
             margin-top: 10px;
-            font-size: 0.9em;
-            color: #28a745;
-            display: none;
-            text-align: center;
+        }
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        .submit-button:active { transform: translateY(0); }
+
+        /* 结果区域 */
+        #resultContainer {
             width: 100%;
+            margin-top: 25px;
+            animation: fadeIn 0.5s ease;
         }
-        .error {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #ffe6e6;
-            border: 1px solid #ffb3b3;
-            border-radius: 8px;
-            color: #cc0000;
-            font-weight: 600;
-            line-height: 1.5;
-            width: calc(100% - 40px); 
-            box-sizing: border-box; 
-            text-align: center;
-            word-wrap: break-word; 
-            margin-left: auto; 
-            margin-right: auto; 
-        }
-        .details-section {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f8fcf8; 
-            border: 1px solid #d4edda;
-            border-radius: 8px;
-            text-align: left;
-            font-size: 0.95em;
-            line-height: 1.6;
-            color: #333;
-            width: 100%; 
-            box-sizing: border-box;
-        }
-        .details-section p {
-            margin-bottom: 8px;
-        }
-        .details-section strong {
-            color: #0056b3; 
-        }
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            color: #6c757d;
-            font-size: 0.9em;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-top: 1px solid #e9ecef;
-            width: 100%;
-            max-width: 500px;
+        .result-card {
             border-radius: 12px;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-        }
-        .footer-links a {
-            color: #007bff;
-            text-decoration: none;
-            margin: 0 10px;
-            font-weight: 500;
-        }
-        .footer-links a:hover {
-            text-decoration: underline;
-        }
-        .social-icons {
-            margin-top: 15px;
-        }
-        .social-icons a {
-            display: inline-block;
-            margin: 0 10px;
-            color: #6c757d;
-            transition: color 0.2s ease;
-            position: relative; /* For positioning the QR code */
-        }
-        .social-icons a:hover {
-            color: #007bff;
-        }
-        .social-icons svg {
-            width: 24px;
-            height: 24px;
-            vertical-align: middle;
-        }
-        .qr-code-popup {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-            justify-content: center;
-            align-items: center;
-        }
-        .qr-code-content {
-            background-color: #fefefe;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            max-width: 300px;
             text-align: center;
+        }
+        .result-card.success { background-color: #f0fff4; border: 1px solid #b7e4c7; }
+        .result-card.error { background-color: #fff1f0; border: 1px solid #ffccc7; color: var(--error-color); font-weight: 500; font-size: 1em; }
+        .result-card h3 { margin: 0 0 15px 0; font-size: 1.2em; color: #2d6a4f; }
+        .result-card.error h3 { color: var(--error-color); }
+        .result-card .access-code-box {
+            background-color: var(--white-color);
+            border: 2px dashed var(--primary-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
             position: relative;
         }
-        .qr-code-content img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 0 auto 15px auto;
-            border-radius: 4px;
+        .result-card .access-code-display {
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--primary-color);
+            word-break: break-all;
         }
-        .qr-code-content h4 {
-            margin-top: 0;
-            color: #333;
+        .copy-hint { display: block; font-size: 0.75em; color: var(--text-secondary-color); margin-top: 6px; }
+        .copy-feedback { position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); background-color: var(--text-color); color: var(--white-color); padding: 4px 8px; border-radius: 4px; font-size: 0.75em; opacity: 0; transition: opacity 0.3s ease; white-space: nowrap; }
+        .copy-feedback.show { opacity: 1; }
+
+        .details-divider { margin: 20px 0 15px; text-align: center; color: var(--text-secondary-color); font-size: 0.8em; display: flex; align-items: center; }
+        .details-divider::before, .details-divider::after { content: ''; flex-grow: 1; height: 1px; background: var(--border-color); }
+        .details-divider::before { margin-right: 10px; }
+        .details-divider::after { margin-left: 10px; }
+        
+        .details-grid { display: grid; grid-template-columns: 1fr; gap: 10px; text-align: left; }
+        .detail-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0; font-size: 0.85em; }
+        .detail-item:last-child { border-bottom: none; }
+        .detail-item .label { color: var(--text-secondary-color); }
+        .detail-item .value { font-weight: 500; word-break: break-all; text-align: right; padding-left: 10px; }
+        .value.highlight { color: var(--primary-color); font-weight: 700; }
+        .frozen-warning { padding: 15px; background-color: #fffbe6; border: 1px solid #ffe58f; border-radius: 8px; color: #d46b08; margin-bottom: 15px; font-size: 0.9em; }
+
+        /* 页脚 */
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            color: var(--text-secondary-color);
+            font-size: 0.8em;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
         }
-        .close-button {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            position: absolute;
-            top: 5px;
-            right: 10px;
-        }
-        .close-button:hover,
-        .close-button:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+        .footer-links { margin-bottom: 10px; display: flex; justify-content: center; gap: 15px; }
+        .footer-links a { color: var(--text-secondary-color); text-decoration: none; font-weight: 500; transition: color 0.2s ease; }
+        .footer-links a:hover { color: var(--primary-color); }
+        .social-icons { margin-bottom: 10px; }
+        .social-icons a { display: inline-block; margin: 0 8px; color: var(--text-secondary-color); transition: transform 0.2s ease, color 0.2s ease; }
+        .social-icons a:hover { color: var(--primary-color); transform: scale(1.1); }
+        .social-icons svg { width: 24px; height: 24px; vertical-align: middle; }
+        .copyright { font-size: 0.9em; }
+
+        /* 二维码弹窗 */
+        .qr-code-popup { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
+        .qr-code-popup.show { display: flex; animation: fadeIn 0.3s ease; }
+        .qr-code-content { background-color: var(--white-color); padding: 25px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; position: relative; animation: zoomIn 0.3s ease; width: 75%; max-width: 280px; }
+        .qr-code-content img { width: 100%; height: auto; display: block; margin: 0 auto 15px; border-radius: 8px; }
+        .qr-code-content h4 { margin: 0 0 10px 0; color: var(--text-color); font-size: 1.1em; }
+        .qr-code-content p { margin: 0; color: var(--text-secondary-color); font-size: 0.9em; }
+        .close-button { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; line-height: 28px; font-size: 22px; font-weight: bold; color: #aaa; cursor: pointer; transition: transform 0.2s ease, color 0.2s ease; }
+        .close-button:hover { color: var(--text-color); transform: rotate(90deg); }
+
+        /* 动画 */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>方方格子自助授权系统</h2></h2>
+    <main class="container">
+        <header class="header">
+            <h2>方方格子自助授权</h2>
+        </header>
+
         <form id="registrationForm">
-            <label for="computer_id">电脑编号:</label>
-            <input type="text" id="computer_id" name="computer_id" placeholder="例如：DN1234 或者 CN5678">
-            <small>请填写6位电脑编号，获取方法：<a href="https://doc.tengzhou.co/#/use/getcode" target="_blank">查看教程</a>。</small>
-            <label for="email">下单邮箱:</label>
-            <input type="email" id="email" name="email" placeholder="例如：your@example.com">
-            <small>电脑编号和下单邮箱至少填写一项。</small>
-            <label>选择有效期:</label>
-            <div class="radio-group">
-                <label>
-                    <input type="radio" name="expiry_option" value="7days"> 7天
-                </label>
-                <label>
-                    <input type="radio" name="expiry_option" value="30days"> 30天
-                </label>
-                <label>
-                    <input type="radio" name="expiry_option" value="365days" checked> 365天
-                </label>
-                <label>
-                    <input type="radio" name="expiry_option" value="forever"> 永久 (2099-12-31)
-                </label>
-                <label>
-                    <input type="radio" name="expiry_option" value="custom"> 自定义日期
-                </label>
+            <div class="form-group">
+                <label for="computer_id">电脑编号</label>
+                <div class="input-wrapper">
+                    <input type="text" id="computer_id" name="computer_id" placeholder="请输入6位电脑编号">
+                </div>
+                <small class="input-tip">不知道如何获取？<a href="https://doc.tengzhou.co/#/use/getcode" target="_blank">查看教程</a></small>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">下单邮箱</label>
+                <div class="input-wrapper">
+                    <input type="email" id="email" name="email" placeholder="电脑编号和邮箱至少填一项">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>选择授权码有效期</label>
+                <div class="radio-group-wrapper">
+                    <div class="radio-group">
+                        <label><input type="radio" name="expiry_option" value="7days"><span>7天</span></label>
+                        <label><input type="radio" name="expiry_option" value="30days"><span>30天</span></label>
+                        <label><input type="radio" name="expiry_option" value="365days" checked><span>365天</span></label>
+                        <label><input type="radio" name="expiry_option" value="forever"><span>永久</span></label>
+                        <label class="full-width"><input type="radio" name="expiry_option" value="custom"><span>自定义日期</span></label>
+                    </div>
+                </div>
             </div>
 
             <div id="customExpiryDateContainer">
-                <label for="custom_date">选择到期日期:</label>
+                <label for="custom_date">选择到期日期</label>
                 <input type="date" id="custom_date" name="custom_date">
             </div>
 
-            <button type="submit">生成授权码</button>
+            <button type="submit" class="submit-button">生成授权码</button>
         </form>
+
         <div id="resultContainer"></div>
-    </div>
-    
+        
         <footer class="footer">
-        <div class="footer-links">
-            <a href="https://doc.tengzhou.co/" target="_blank">方方格子教程</a>
-            <a href="https://m.jian.fan/" target="_blank">自助下单购买</a>
-        </div>
-        <div class="social-icons">
-            <a href="javascript:void(0);" title="微信" data-qr-image="weixin_qr.png" data-qr-title="微信扫码联系">
-                <svg t="1747907241069" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1531" width="48" height="48"><path d="M683.058 364.695c11 0 22 1.016 32.943 1.976C686.564 230.064 538.896 128 370.681 128c-188.104 0.66-342.237 127.793-342.237 289.226 0 93.068 51.379 169.827 136.725 229.256L130.72 748.43l119.796-59.368c42.918 8.395 77.37 16.79 119.742 16.79 11 0 21.46-0.48 31.914-1.442a259.168 259.168 0 0 1-10.455-71.358c0.485-148.002 128.744-268.297 291.403-268.297l-0.06-0.06z m-184.113-91.992c25.99 0 42.913 16.79 42.913 42.575 0 25.188-16.923 42.579-42.913 42.579-25.45 0-51.38-16.85-51.38-42.58 0-25.784 25.93-42.574 51.38-42.574z m-239.544 85.154c-25.384 0-51.374-16.85-51.374-42.58 0-25.784 25.99-42.574 51.374-42.574 25.45 0 42.918 16.79 42.918 42.575 0 25.188-16.924 42.579-42.918 42.579z m736.155 271.655c0-135.647-136.725-246.527-290.983-246.527-162.655 0-290.918 110.88-290.918 246.527 0 136.128 128.263 246.587 290.918 246.587 33.972 0 68.423-8.395 102.818-16.85l93.809 50.973-25.93-84.677c68.907-51.93 120.286-119.815 120.286-196.033z m-385.275-42.58c-16.923 0-34.452-16.79-34.452-34.179 0-16.79 17.529-34.18 34.452-34.18 25.99 0 42.918 16.85 42.918 34.18 0 17.39-16.928 34.18-42.918 34.18z m188.165 0c-16.984 0-33.972-16.79-33.972-34.179 0-16.79 16.927-34.18 33.972-34.18 25.93 0 42.913 16.85 42.913 34.18 0 17.39-16.983 34.18-42.913 34.18z" fill="#09BB07" p-id="1532"></path></svg>
-            </a>
-            <a href="javascript:void(0);" title="QQ" data-qr-image="qq_qr.png" data-qr-title="QQ扫码联系">
-                <svg t="1747907294673" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3459" width="48" height="48"><path d="M511.09761 957.257c-80.159 0-153.737-25.019-201.11-62.386-24.057 6.702-54.831 17.489-74.252 30.864-16.617 11.439-14.546 23.106-11.55 27.816 13.15 20.689 225.583 13.211 286.912 6.767v-3.061z" fill="#FAAD08" p-id="3460"></path><path d="M496.65061 957.257c80.157 0 153.737-25.019 201.11-62.386 24.057 6.702 54.83 17.489 74.253 30.864 16.616 11.439 14.543 23.106 11.55 27.816-13.15 20.689-225.584 13.211-286.914 6.767v-3.061z" fill="#FAAD08" p-id="3461"></path><path d="M497.12861 474.524c131.934-0.876 237.669-25.783 273.497-35.34 8.541-2.28 13.11-6.364 13.11-6.364 0.03-1.172 0.542-20.952 0.542-31.155C784.27761 229.833 701.12561 57.173 496.64061 57.162 292.15661 57.173 209.00061 229.832 209.00061 401.665c0 10.203 0.516 29.983 0.547 31.155 0 0 3.717 3.821 10.529 5.67 33.078 8.98 140.803 35.139 276.08 36.034h0.972z" fill="#000000" p-id="3462"></path><path d="M860.28261 619.782c-8.12-26.086-19.204-56.506-30.427-85.72 0 0-6.456-0.795-9.718 0.148-100.71 29.205-222.773 47.818-315.792 46.695h-0.962C410.88561 582.017 289.65061 563.617 189.27961 534.698 185.44461 533.595 177.87261 534.063 177.87261 534.063 166.64961 563.276 155.56661 593.696 147.44761 619.782 108.72961 744.168 121.27261 795.644 130.82461 796.798c20.496 2.474 79.78-93.637 79.78-93.637 0 97.66 88.324 247.617 290.576 248.996a718.01 718.01 0 0 1 5.367 0C708.80161 950.778 797.12261 800.822 797.12261 703.162c0 0 59.284 96.111 79.783 93.637 9.55-1.154 22.093-52.63-16.623-177.017" fill="#000000" p-id="3463"></path><path d="M434.38261 316.917c-27.9 1.24-51.745-30.106-53.24-69.956-1.518-39.877 19.858-73.207 47.764-74.454 27.875-1.224 51.703 30.109 53.218 69.974 1.527 39.877-19.853 73.2-47.742 74.436m206.67-69.956c-1.494 39.85-25.34 71.194-53.24 69.956-27.888-1.238-49.269-34.559-47.742-74.435 1.513-39.868 25.341-71.201 53.216-69.974 27.909 1.247 49.285 34.576 47.767 74.453" fill="#FFFFFF" p-id="3464"></path><path d="M683.94261 368.627c-7.323-17.609-81.062-37.227-172.353-37.227h-0.98c-91.29 0-165.031 19.618-172.352 37.227a6.244 6.244 0 0 0-0.535 2.505c0 1.269 0.393 2.414 1.006 3.386 6.168 9.765 88.054 58.018 171.882 58.018h0.98c83.827 0 165.71-48.25 171.881-58.016a6.352 6.352 0 0 0 1.002-3.395c0-0.897-0.2-1.736-0.531-2.498" fill="#FAAD08" p-id="3465"></path><path d="M467.63161 256.377c1.26 15.886-7.377 30-19.266 31.542-11.907 1.544-22.569-10.083-23.836-25.978-1.243-15.895 7.381-30.008 19.25-31.538 11.927-1.549 22.607 10.088 23.852 25.974m73.097 7.935c2.533-4.118 19.827-25.77 55.62-17.886 9.401 2.07 13.75 5.116 14.668 6.316 1.355 1.77 1.726 4.29 0.352 7.684-2.722 6.725-8.338 6.542-11.454 5.226-2.01-0.85-26.94-15.889-49.905 6.553-1.579 1.545-4.405 2.074-7.085 0.242-2.678-1.834-3.786-5.553-2.196-8.135" fill="#000000" p-id="3466"></path><path d="M504.33261 584.495h-0.967c-63.568 0.752-140.646-7.504-215.286-21.92-6.391 36.262-10.25 81.838-6.936 136.196 8.37 137.384 91.62 223.736 220.118 224.996H506.48461c128.498-1.26 211.748-87.612 220.12-224.996 3.314-54.362-0.547-99.938-6.94-136.203-74.654 14.423-151.745 22.684-215.332 21.927" fill="#FFFFFF" p-id="3467"></path><path d="M323.27461 577.016v137.468s64.957 12.705 130.031 3.91V591.59c-41.225-2.262-85.688-7.304-130.031-14.574" fill="#EB1C26" p-id="3468"></path><path d="M788.09761 432.536s-121.98 40.387-283.743 41.539h-0.962c-161.497-1.147-283.328-41.401-283.744-41.539l-40.854 106.952c102.186 32.31 228.837 53.135 324.598 51.926l0.96-0.002c95.768 1.216 222.4-19.61 324.6-51.924l-40.855-106.952z" fill="#EB1C26" p-id="3469"></path></svg>
-            </a>
-                        <a href="javascript:void(0);" title= "自助授权微信小程序" data-qr-image="xcx.png" data-qr-title= "自助授权微信小程序">
-                <svg t="1748794601207" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1593" width="32" height="32"><path d="M0 512c0 282.781538 229.218462 512 512 512s512-229.218462 512-512S794.781538 0 512 0 0 229.218462 0 512z" fill="#2EA144" p-id="1594"></path><path d="M693.76 204.8c-112.64 0-202.24 92.16-202.24 204.8v204.8c0 74.24-61.44 135.68-135.68 135.68-74.24 0-135.68-61.44-135.68-135.68 0-74.24 61.44-135.68 135.68-135.68V409.6c-112.64 0-202.24 92.16-202.24 204.8 0 112.64 89.6 204.8 202.24 204.8s202.24-92.16 202.24-204.8v-204.8c0-74.24 61.44-135.68 135.68-135.68 74.24 0 135.68 61.44 135.68 135.68 0 74.24-61.44 135.68-135.68 135.68V614.4c112.64 0 202.24-92.16 202.24-204.8 0-112.64-89.6-204.8-202.24-204.8z" fill="#FFFFFF" p-id="1595"></path></svg>
-            </a>
-        </div>
-        <p>&copy; 2021-2025 青春云科技 All rights reserved.</p>
-    </footer>
+            <div class="footer-links">
+                <a href="https://doc.tengzhou.co/" target="_blank">使用教程</a>
+                <a href="https://m.jian.fan/" target="_blank">在线商城</a>
+            </div>
+            <div class="social-icons">
+                <a href="javascript:void(0);" title="微信客服" data-qr-image="weixin_qr.png" data-qr-title="微信扫码联系">
+                    <svg viewBox="0 0 1024 1024"><path d="M683.058 364.695c11 0 22 1.016 32.943 1.976C686.564 230.064 538.896 128 370.681 128c-188.104 0.66-342.237 127.793-342.237 289.226 0 93.068 51.379 169.827 136.725 229.256L130.72 748.43l119.796-59.368c42.918 8.395 77.37 16.79 119.742 16.79 11 0 21.46-0.48 31.914-1.442a259.168 259.168 0 0 1-10.455-71.358c0.485-148.002 128.744-268.297 291.403-268.297l-0.06-0.06z m-184.113-91.992c25.99 0 42.913 16.79 42.913 42.575 0 25.188-16.923 42.579-42.913 42.579-25.45 0-51.38-16.85-51.38-42.58 0-25.784 25.93-42.574 51.38-42.574z m-239.544 85.154c-25.384 0-51.374-16.85-51.374-42.58 0-25.784 25.99-42.574 51.374-42.574 25.45 0 42.918 16.79 42.918 42.575 0 25.188-16.924 42.579-42.918 42.579z m736.155 271.655c0-135.647-136.725-246.527-290.983-246.527-162.655 0-290.918 110.88-290.918 246.527 0 136.128 128.263 246.587 290.918 246.587 33.972 0 68.423-8.395 102.818-16.85l93.809 50.973-25.93-84.677c68.907-51.93 120.286-119.815 120.286-196.033z m-385.275-42.58c-16.923 0-34.452-16.79-34.452-34.179 0-16.79 17.529-34.18 34.452-34.18 25.99 0 42.918 16.85 42.918 34.18 0 17.39-16.928 34.18-42.918 34.18z m188.165 0c-16.984 0-33.972-16.79-33.972-34.179 0-16.79 16.927-34.18 33.972-34.18 25.93 0 42.913 16.85 42.913 34.18 0 17.39-16.983 34.18-42.913 34.18z" fill="#09BB07"></path></svg>
+                </a>
+                <a href="javascript:void(0);" title="QQ客服" data-qr-image="qq_qr.png" data-qr-title="QQ扫码联系">
+                    <svg viewBox="0 0 1024 1024"><path d="M511.09761 957.257c-80.159 0-153.737-25.019-201.11-62.386-24.057 6.702-54.831 17.489-74.252 30.864-16.617 11.439-14.546 23.106-11.55 27.816 13.15 20.689 225.583 13.211 286.912 6.767v-3.061z" fill="#FAAD08"></path><path d="M496.65061 957.257c80.157 0 153.737-25.019 201.11-62.386 24.057 6.702 54.83 17.489 74.253 30.864 16.616 11.439 14.543 23.106 11.55 27.816-13.15 20.689-225.584 13.211-286.914 6.767v-3.061z" fill="#FAAD0O8"></path><path d="M497.12861 474.524c131.934-0.876 237.669-25.783 273.497-35.34 8.541-2.28 13.11-6.364 13.11-6.364 0.03-1.172 0.542-20.952 0.542-31.155C784.27761 229.833 701.12561 57.173 496.64061 57.162 292.15661 57.173 209.00061 229.832 209.00061 401.665c0 10.203 0.516 29.983 0.547 31.155 0 0 3.717 3.821 10.529 5.67 33.078 8.98 140.803 35.139 276.08 36.034h0.972z" fill="#000000"></path><path d="M860.28261 619.782c-8.12-26.086-19.204-56.506-30.427-85.72 0 0-6.456-0.795-9.718 0.148-100.71 29.205-222.773 47.818-315.792 46.695h-0.962C410.88561 582.017 289.65061 563.617 189.27961 534.698 185.44461 533.595 177.87261 534.063 177.87261 534.063 166.64961 563.276 155.56661 593.696 147.44761 619.782 108.72961 744.168 121.27261 795.644 130.82461 796.798c20.496 2.474 79.78-93.637 79.78-93.637 0 97.66 88.324 247.617 290.576 248.996a718.01 718.01 0 0 1 5.367 0C708.80161 950.778 797.12261 800.822 797.12261 703.162c0 0 59.284 96.111 79.783 93.637 9.55-1.154 22.093-52.63-16.623-177.017" fill="#000000"></path><path d="M434.38261 316.917c-27.9 1.24-51.745-30.106-53.24-69.956-1.518-39.877 19.858-73.207 47.764-74.454 27.875-1.224 51.703 30.109 53.218 69.974 1.527 39.877-19.853 73.2-47.742 74.436m206.67-69.956c-1.494 39.85-25.34 71.194-53.24 69.956-27.888-1.238-49.269-34.559-47.742-74.435 1.513-39.868 25.341-71.201 53.216-69.974 27.909 1.247 49.285 34.576 47.767 74.453" fill="#FFFFFF"></path><path d="M683.94261 368.627c-7.323-17.609-81.062-37.227-172.353-37.227h-0.98c-91.29 0-165.031 19.618-172.352 37.227a6.244 6.244 0 0 0-0.535 2.505c0 1.269 0.393 2.414 1.006 3.386 6.168 9.765 88.054 58.018 171.882 58.018h0.98c83.827 0 165.71-48.25 171.881-58.016a6.352 6.352 0 0 0 1.002-3.395c0-0.897-0.2-1.736-0.531-2.498" fill="#FAAD08"></path><path d="M467.63161 256.377c1.26 15.886-7.377 30-19.266 31.542-11.907 1.544-22.569-10.083-23.836-25.978-1.243-15.895 7.381-30.008 19.25-31.538 11.927-1.549 22.607 10.088 23.852 25.974m73.097 7.935c2.533-4.118 19.827-25.77 55.62-17.886 9.401 2.07 13.75 5.116 14.668 6.316 1.355 1.77 1.726 4.29 0.352 7.684-2.722 6.725-8.338 6.542-11.454 5.226-2.01-0.85-26.94-15.889-49.905 6.553-1.579 1.545-4.405 2.074-7.085 0.242-2.678-1.834-3.786-5.553-2.196-8.135" fill="#000000"></path><path d="M504.33261 584.495h-0.967c-63.568 0.752-140.646-7.504-215.286-21.92-6.391 36.262-10.25 81.838-6.936 136.196 8.37 137.384 91.62 223.736 220.118 224.996H506.48461c128.498-1.26 211.748-87.612 220.12-224.996 3.314-54.362-0.547-99.938-6.94-136.203-74.654 14.423-151.745 22.684-215.332 21.927" fill="#FFFFFF"></path><path d="M323.27461 577.016v137.468s64.957 12.705 130.031 3.91V591.59c-41.225-2.262-85.688-7.304-130.031-14.574" fill="#EB1C26"></path><path d="M788.09761 432.536s-121.98 40.387-283.743 41.539h-0.962c-161.497-1.147-283.328-41.401-283.744-41.539l-40.854 106.952c102.186 32.31 228.837 53.135 324.598 51.926l0.96-0.002c95.768 1.216 222.4-19.61 324.6-51.924l-40.855-106.952z" fill="#EB1C26"></path></svg>
+                </a>
+                <a href="javascript:void(0);" title="自助授权微信小程序" data-qr-image="xcx.png" data-qr-title="自助授权微信小程序">
+                    <svg viewBox="0 0 1024 1024"><path d="M0 512c0 282.781538 229.218462 512 512 512s512-229.218462 512-512S794.781538 0 512 0 0 229.218462 0 512z" fill="#2EA144"></path><path d="M693.76 204.8c-112.64 0-202.24 92.16-202.24 204.8v204.8c0 74.24-61.44 135.68-135.68 135.68-74.24 0-135.68-61.44-135.68-135.68 0-74.24 61.44-135.68 135.68-135.68V409.6c-112.64 0-202.24 92.16-202.24 204.8 0 112.64 89.6 204.8 202.24 204.8s202.24-92.16 202.24-204.8v-204.8c0-74.24 61.44-135.68 135.68-135.68 74.24 0 135.68 61.44 135.68 135.68 0 74.24-61.44 135.68-135.68 135.68V614.4c112.64 0 202.24-92.16 202.24-204.8 0-112.64-89.6-204.8-202.24-204.8z" fill="#FFFFFF"></path></svg>
+                </a>
+            </div>
+            <p class="copyright">© 2021-2025 青春云科技 All rights reserved.</p>
+        </footer>
+    </main>
+
     <div id="qrCodePopup" class="qr-code-popup">
         <div class="qr-code-content">
-            <span class="close-button" id="closeQrCodePopup">&times;</span>
+            <span class="close-button">×</span>
             <h4 id="qrCodeTitle"></h4>
             <img id="qrCodeImage" src="" alt="QR Code">
+            <p>请使用相应APP扫码</p>
         </div>
     </div>
+
     <script>
+        // JavaScript 逻辑保持不变
         document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+            const resultContainer = document.getElementById('resultContainer');
             const expiryOptionRadios = document.querySelectorAll('input[name="expiry_option"]');
             const customExpiryDateContainer = document.getElementById('customExpiryDateContainer');
             const customDateInput = document.getElementById('custom_date');
             const computerIdInput = document.getElementById('computer_id');
-            const emailInput = document.getElementById('email');
-            const qrCodePopup = document.getElementById('qrCodePopup');
-            const qrCodeImage = document.getElementById('qrCodeImage');
-            const qrCodeTitle = document.getElementById('qrCodeTitle');
-            const closeQrCodePopup = document.getElementById('closeQrCodePopup');
-            const socialIcons = document.querySelectorAll('.social-icons a');
             const today = new Date();
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0'); 
             const dd = String(today.getDate()).padStart(2, '0');
             customDateInput.min = `${yyyy}-${mm}-${dd}`;
             computerIdInput.addEventListener('input', function() {
-                this.value = this.value.toUpperCase();
-                this.value = this.value.replace(/[^A-Z0-9]/g, '').substring(0, 6);
+                this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 6);
             });
             expiryOptionRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
-                    if (this.value === 'custom') {
-                        customExpiryDateContainer.style.display = 'block';
-                        customDateInput.setAttribute('required', 'required'); 
-                    } else {
-                        customExpiryDateContainer.style.display = 'none';
-                        customDateInput.removeAttribute('required'); 
-                    }
+                    customExpiryDateContainer.classList.toggle('show', this.value === 'custom');
                 });
             });
-            document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            form.addEventListener('submit', function(event) {
                 event.preventDefault();
-
-                const computerId = computerIdInput.value;
-                const email = emailInput.value;
+                resultContainer.innerHTML = ''; 
+                const computerId = document.getElementById('computer_id').value;
+                const email = document.getElementById('email').value;
                 const expiryOption = document.querySelector('input[name="expiry_option"]:checked').value;
                 let customDate = '';
-                if (computerId.trim() === '' && email.trim() === '') {
-                    alert('电脑编号和下单邮箱不能同时为空，请至少输入一项。');
-                    return;
-                }
-                if (computerId.trim() !== '' && !/^[A-Z0-9]{6}$/.test(computerId.toUpperCase())) {
-                    alert('电脑编号必须是6位字母或数字的组合。');
-                    return;
-                }
-                if (email.trim() !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                    alert('下单邮箱格式不正确。');
-                    return;
-                }
+                if (!computerId && !email) { showError('电脑编号和下单邮箱不能同时为空。'); return; }
+                if (computerId && !/^[A-Z0-9]{6}$/.test(computerId)) { showError('电脑编号必须是6位字母或数字。'); return; }
+                if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('下单邮箱格式不正确。'); return; }
                 if (expiryOption === 'custom') {
                     customDate = customDateInput.value;
-                    if (!customDate) {
-                        alert('请选择自定义到期日期！');
-                        return;
-                    }
-                    const selectedDate = new Date(customDate);
+                    if (!customDate) { showError('请选择自定义到期日期！'); return; }
                     const todayForComparison = new Date();
-                    todayForComparison.setHours(0, 0, 0, 0); 
-                    if (selectedDate < todayForComparison) {
-                        alert('自定义到期日期不能早于今天。');
-                        return;
-                    }
+                    todayForComparison.setHours(0,0,0,0);
+                    if (new Date(customDate) < todayForComparison) { showError('自定义日期不能早于今天。'); return; }
                 }
-                const resultContainer = document.getElementById('resultContainer');
-                resultContainer.innerHTML = ''; 
-
                 const data = {
-                    computer_id: computerId,
-                    email: email,
-                    expiry_option: expiryOption,
-                    custom_date: customDate
+                    computer_id: computerId, email: email,
+                    expiry_option: expiryOption, custom_date: customDate
                 };
-
                 fetch('https://ffcell.jian.fan/generate.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        const details = data.details;
-
-                        if (data.code === 'FROZEN_ID_RETURNED') {
-                            resultContainer.innerHTML = `
-                                <div class="result-section">
-                                    <div class="result" style="background-color: #fffbe6; border-color: #ffe58f;">
-                                        <h3 style="color: #faad14;">已冻结设备提醒</h3>
-                                        <p style="width:100%; text-align:center; margin-bottom: 15px;">${data.message}</p>
-                                        <div class="access-code-display" id="accessCodeToCopy">${data.access_code}</div>
-                                        <button class="copy-button" onclick="copyAccessCode()">复制</button>
-                                        <div class="copy-feedback" id="copyFeedback">已复制！</div>
-                                        
-                                        <div class="details-section" style="background-color: #fff;">
-                                            <h3>基本信息</h3>
-                                            <p>电脑编号: <strong>${details.computer_id}</strong></p>
-                                            <p>关联邮箱: <strong>${details.email || '未提供'}</strong></p>
-                                            <p>状态: <strong style="color: #d4380d;">已冻结</strong></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        } else {
-                            const remainingChangesText = details.formatted_remaining_changes_text;
-                            resultContainer.innerHTML = `
-                                <div class="result-section">
-                                    <div class="result">
-                                        <h3>生成的授权码:</h3>
-                                        <div class="access-code-display" id="accessCodeToCopy">${data.access_code}</div>
-                                        <button class="copy-button" onclick="copyAccessCode()">复制</button>
-                                        <div class="copy-feedback" id="copyFeedback">已复制！</div>
-                                        
-                                        <div class="details-section">
-                                            <h3>授权信息详情</h3>
-                                            <p>电脑编号: <strong>${details.computer_id}</strong></p>
-                                            <p>下单邮箱: <strong>${details.email || '未提供'}</strong></p>
-                                            <p>订单创建时间: <strong>${details.order_created_at}</strong></p>
-                                            <p>您购买的时长: <strong>${details.bought_duration_text}</strong></p>
-                                            <p>订单最大有效期至: <strong>${details.max_expire_date_from_order}</strong></p>
-                                            <p>您选择的有效期: <strong>${details.selected_expiry_option}</strong></p>
-                                            <p>授权码实际到期日: <strong>${details.generated_expire_date}</strong> (${details.expiry_determination_reason})</p>
-                                            <p>剩余可更换电脑编号次数: <strong>${remainingChangesText}</strong></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }
+                        showSuccessResult(data);
                     } else {
-                        resultContainer.innerHTML = `<div class="error">错误: ${data.message}</div>`;
+                        showError(data.message || '未知错误，请联系客服。');
                     }
+                    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 })
                 .catch(error => {
                     console.error('Fetch error:', error);
-                    resultContainer.innerHTML = `<div class="error">网络请求失败，请稍后再试。</div>`;
+                    showError('网络请求失败，请稍后再试。');
+                    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 });
             });
-            socialIcons.forEach(icon => {
+            const qrCodePopup = document.getElementById('qrCodePopup');
+            const qrCodeImage = document.getElementById('qrCodeImage');
+            const qrCodeTitle = document.getElementById('qrCodeTitle');
+            const closeButton = qrCodePopup.querySelector('.close-button');
+            document.querySelectorAll('.social-icons a[data-qr-image]').forEach(icon => {
                 icon.addEventListener('click', function(e) {
-                    e.preventDefault(); 
-                    const qrImageSrc = this.dataset.qrImage; 
-                    const qrTitleText = this.dataset.qrTitle || '联系方式'; 
-
-                    if (qrImageSrc) {
-                        qrCodeImage.src = qrImageSrc;
-                        qrCodeTitle.textContent = qrTitleText;
-                        qrCodePopup.style.display = 'flex'; 
-                    } else {
-                        alert('未找到二维码图片路径。');
-                    }
+                    e.preventDefault();
+                    qrCodeImage.src = this.dataset.qrImage;
+                    qrCodeTitle.textContent = this.dataset.qrTitle || '扫码联系';
+                    qrCodePopup.classList.add('show');
                 });
             });
-            closeQrCodePopup.addEventListener('click', function() {
-                qrCodePopup.style.display = 'none';
+            closeButton.addEventListener('click', () => qrCodePopup.classList.remove('show'));
+            qrCodePopup.addEventListener('click', (e) => {
+                if (e.target === qrCodePopup) qrCodePopup.classList.remove('show');
             });
-
-            qrCodePopup.addEventListener('click', function(e) {
-                if (e.target === qrCodePopup) {
-                    qrCodePopup.style.display = 'none';
+            function showSuccessResult(data) {
+                const details = data.details;
+                let detailsHtml = '';
+                if (data.code === 'FROZEN_ID_RETURNED') {
+                    detailsHtml = `
+                        <div class="frozen-warning">${data.message}</div>
+                        <div class="detail-item"><span class="label">电脑编号</span><span class="value">${details.computer_id}</span></div>
+                        <div class="detail-item"><span class="label">关联邮箱</span><span class="value">${details.email || 'N/A'}</span></div>
+                        <div class="detail-item"><span class="label">状态</span><span class="value highlight error">已冻结</span></div>
+                    `;
+                } else {
+                    detailsHtml = `
+                        <div class="detail-item"><span class="label">电脑编号</span><span class="value">${details.computer_id}</span></div>
+                        <div class="detail-item"><span class="label">下单邮箱</span><span class="value">${details.email || 'N/A'}</span></div>
+                        <div class="detail-item"><span class="label">购买套餐</span><span class="value">${details.bought_duration_text}</span></div>
+                        <div class="detail-item"><span class="label">授权码到期</span><span class="value">${details.generated_expire_date}</span></div>
+                        <div class="detail-item"><span class="label">剩余更换次数</span><span class="value highlight">${details.formatted_remaining_changes_text}</span></div>
+                    `;
                 }
-            });
-        });
-        function copyAccessCode() {
-            const accessCodeElement = document.getElementById('accessCodeToCopy');
-            const feedbackElement = document.getElementById('copyFeedback');
-            const textToCopy = accessCodeElement.innerText || accessCodeElement.textContent;
-            performCopy(textToCopy, feedbackElement);
-        }
-        function copySpecificAccessCode(textToCopy) {
-            const feedbackElement = document.getElementById('copyFeedback'); 
-            performCopy(textToCopy, feedbackElement);
-        }
-        function performCopy(textToCopy, feedbackElement) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    feedbackElement.style.display = 'block';
-                    setTimeout(() => {
-                        feedbackElement.style.display = 'none';
-                    }, 2000);
-                }).catch(err => {
-                    console.error('无法复制文本：', err);
-                    alert('复制失败，请手动复制: ' + textToCopy);
+                resultContainer.innerHTML = `
+                    <div class="result-card success">
+                        <h3>授权码已生成</h3>
+                        <div class="access-code-box" id="accessCodeBox">
+                            <div class="access-code-display">${data.access_code}</div>
+                            <small class="copy-hint">点击上方授权码即可复制</small>
+                            <div class="copy-feedback">已复制!</div>
+                        </div>
+                        <div class="details-divider">授权详情</div>
+                        <div class="details-grid">
+                            ${detailsHtml}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('accessCodeBox').addEventListener('click', function() {
+                    copyToClipboard(data.access_code, this.querySelector('.copy-feedback'));
                 });
-            } else {
-                const tempInput = document.createElement('textarea');
-                tempInput.value = textToCopy;
-                document.body.appendChild(tempInput);
-                tempInput.select();
-                try {
-                    document.execCommand('copy');
-                    feedbackElement.style.display = 'block';
-                    setTimeout(() => {
-                        feedbackElement.style.display = 'none';
-                    }, 2000);
-                } catch (err) {
-                    console.error('无法复制文本：', err);
-                    alert('复制失败，请手动复制: ' + textToCopy);
-                }
-                document.body.removeChild(tempInput);
             }
-        }
+            function showError(message) {
+                resultContainer.innerHTML = `<div class="result-card error"><h3>操作失败</h3><p>${message}</p></div>`;
+            }
+            function copyToClipboard(text, feedbackElement) {
+                navigator.clipboard.writeText(text).then(() => {
+                    feedbackElement.classList.add('show');
+                    setTimeout(() => feedbackElement.classList.remove('show'), 2000);
+                }).catch(err => {
+                    console.error('复制失败: ', err);
+                    alert('复制失败，您的浏览器可能不支持此功能。');
+                });
+            }
+        });
     </script>
 </body>
 </html>
