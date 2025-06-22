@@ -154,7 +154,7 @@
                 if (new Date(customDate) < todayForComparison) { showError('自定义日期不能早于今天。'); return; }
             }
             const data = { computer_id: computerId, email: email, expiry_option: expiryOption, custom_date: customDate };
-            fetch('generate.php', {
+            fetch('https://ffcell.jian.fan/generate.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
