@@ -3,21 +3,21 @@
   font-family: 'Noto Sans SC';
   font-style: normal;
   font-weight: 400;
-  src: url('./assets/fonts/noto-sans-sc-400.woff2') format('woff2');
+  src: url('/assets/fonts/noto-sans-sc-400.woff2') format('woff2');
 }
 @font-face {
   font-display: swap;
   font-family: 'Noto Sans SC';
   font-style: normal;
   font-weight: 500;
-  src: url('./assets/fonts/noto-sans-sc-500.woff2') format('woff2');
+  src: url('/assets/fonts/noto-sans-sc-500.woff2') format('woff2');
 }
 @font-face {
   font-display: swap;
   font-family: 'Noto Sans SC';
   font-style: normal;
   font-weight: 700;
-  src: url('./assets/fonts/noto-sans-sc-700.woff2') format('woff2');
+  src: url('/assets/fonts/noto-sans-sc-700.woff2') format('woff2');
 }
 
 :root {
@@ -186,9 +186,9 @@ body {
     visibility: visible;
     transform: translateX(-50%) translateY(-5px);
 }
-.brand-social-icon[data-qr-image="weixin_qr.png"]::before { --qr-code-url: url('weixin_qr.png'); }
-.brand-social-icon[data-qr-image="qq_qr.png"]::before { --qr-code-url: url('qq_qr.png'); }
-.brand-social-icon[data-qr-image="xcx.png"]::before { --qr-code-url: url('xcx.png'); }
+.brand-social-icon[data-qr-image="/assets/images/weixin_qr.png"]::before { --qr-code-url: url('/assets/images/weixin_qr.png'); }
+.brand-social-icon[data-qr-image="/assets/images/qq_qr.png"]::before { --qr-code-url: url('/assets/images/qq_qr.png'); }
+.brand-social-icon[data-qr-image="/assets/images/xcx.png"]::before { --qr-code-url: url('/assets/images/xcx.png'); }
 
 
 .form-container {
