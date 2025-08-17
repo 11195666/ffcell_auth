@@ -1,24 +1,6 @@
-@font-face {
-  font-display: swap;
-  font-family: 'Noto Sans SC';
-  font-style: normal;
-  font-weight: 400;
-  src: url('/assets/fonts/noto-sans-sc-400.woff2') format('woff2');
-}
-@font-face {
-  font-display: swap;
-  font-family: 'Noto Sans SC';
-  font-style: normal;
-  font-weight: 500;
-  src: url('/assets/fonts/noto-sans-sc-500.woff2') format('woff2');
-}
-@font-face {
-  font-display: swap;
-  font-family: 'Noto Sans SC';
-  font-style: normal;
-  font-weight: 700;
-  src: url('/assets/fonts/noto-sans-sc-700.woff2') format('woff2');
-}
+/* 文件路径: /assets/style/style.css (已优化字体加载) */
+
+/* --- 删除了顶部的 @font-face 规则 --- */
 
 :root {
     --primary-color: #4A90E2;
@@ -45,7 +27,8 @@ html {
 }
 
 body {
-    font-family: 'Noto Sans SC', sans-serif;
+    /* 【核心优化】使用系统字体栈 */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.5;
@@ -54,6 +37,49 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* --- 后续所有其他CSS规则保持不变 --- */
+    .auth-mode-selector {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: -10px;
+    }
+    .auth-mode-selector label {
+        cursor: pointer;
+        padding: 0.25rem 0;
+        position: relative;
+        font-weight: 500;
+        color: #6c757d;
+    }
+    .auth-mode-selector input[type="radio"] {
+        display: none;
+    }
+    .auth-mode-selector input[type="radio"] + label::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: transparent;
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+    .auth-mode-selector input[type="radio"]:checked + label {
+        color: var(--primary-color, #4A90E2);
+    }
+    .auth-mode-selector input[type="radio"]:checked + label::after {
+        background-color: var(--primary-color, #4A90E2);
+        transform: scaleX(1);
+    }
+    
+    #expiry-section {
+        transition: opacity 0.3s ease, max-height 0.3s ease, margin-top 0.3s ease, visibility 0.3s;
+        overflow: hidden;
+        max-height: 500px;
+        opacity: 1;
+        margin-top: 1.5rem; /* 默认的 margin-top */
+    }
+    
 .page-container {
     width: 100%;
 }
@@ -494,7 +520,6 @@ input.flatpickr-input { caret-color: var(--primary-color); }
         align-items: center;
         min-height: 100vh;
         padding: 2rem;
-        /* ✅ 新增：允许父容器在内容超高时出现滚动条 */
         overflow-y: auto; 
     }
     .page-wrapper {
@@ -502,13 +527,9 @@ input.flatpickr-input { caret-color: var(--primary-color); }
         flex-direction: row;
         margin: 0;
         height: auto;
-        /* ❌ 删除这一行：不再限制最大高度，让其自适应内容 */
-        /* max-height: 90vh; */
+        min-height: 1px;
         border-radius: var(--border-radius-lg);
         box-shadow: var(--card-shadow);
-        
-        /* ✅ 新增：确保在某些浏览器下最小高度不会被压缩 */
-        min-height: 1px;
     }
     .brand-container {
         flex: 0 0 40%;
@@ -526,8 +547,6 @@ input.flatpickr-input { caret-color: var(--primary-color); }
     .form-container {
         flex: 1 1 60%;
         padding: 2.5rem;
-        /* ❌ 删除这一行：将滚动能力交给更上层的容器 */
-        /* overflow-y: auto; */
     }
     .fab-container {
         display: none;
@@ -546,3 +565,131 @@ input.flatpickr-input { caret-color: var(--primary-color); }
         border-radius: 0;
     }
 }
+/* 美化统一的校验输入框 (textarea) */
+#cdk-check-input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #e0e6f3;
+    border-radius: 8px;
+    font-family: 'Menlo', 'Monaco', 'Consolas', "Courier New", monospace; /* 使用等宽字体，让CDK对齐更好看 */
+    font-size: 1em;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    resize: vertical; /* 只允许垂直方向调整大小 */
+    min-height: 120px; /* 最小高度，避免太小 */
+}
+
+#cdk-check-input:focus {
+    outline: none;
+    border-color: #4A90E2;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+/* 校验区域的提示文字样式 */
+#check-cdk-section .input-tip {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+/* 批量校验结果列表样式 */
+.result-card .batch-results {
+    list-style-type: none;
+    padding: 8px; /* 增加内边距 */
+    margin-top: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #f0f2f5; /* 调整背景色，更柔和 */
+    border: 1px solid #e0e6f3;
+    border-radius: 8px; /* 增加圆角 */
+    font-family: 'Menlo', 'Monaco', 'Consolas', "Courier New", monospace; /* 同样使用等宽字体 */
+    font-size: 0.9em;
+}
+.batch-results li {
+    padding: 10px 15px; /* 增加行内边距 */
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+.batch-results li:hover {
+    background-color: #e9ecef; /* 鼠标悬停时高亮 */
+}
+.batch-results li:last-child {
+    border-bottom: none;
+}
+
+/* 状态徽章的美化 */
+.batch-results .status-badge {
+    font-weight: bold;
+    padding: 3px 8px; /* 调整徽章大小 */
+    border-radius: 12px; /* 胶囊形状 */
+    color: white;
+    font-size: 0.9em;
+    min-width: 60px; /* 最小宽度，让徽章对齐 */
+    text-align: center;
+}
+
+/* 状态颜色定义 */
+.status-available { background-color: #198754; } /* 可使用 - 绿色 */
+.status-used { background-color: #6c757d; } /* 已使用 - 灰色 */
+.status-disabled { background-color: #ffc107; color: #333 !important; } /* 已禁用 - 黄色，深色文字 */
+.status-expired { background-color: #dc3545; } /* 已过期 - 红色 */
+.status-not_found { background-color: #adb5bd; } /* 不存在 - 浅灰色 */
+
+.batch-results li {
+    flex-wrap: wrap; /* 允许内容换行 */
+}
+
+.batch-results li .main-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    cursor: pointer; /* 提示可点击 */
+}
+/* 禁掉不可展开项的指针样式 */
+.batch-results li:not(.expandable) .main-info {
+    cursor: default;
+}
+
+.batch-results .details-panel {
+    display: none; /* 默认隐藏详情 */
+    width: 100%;
+    padding: 10px 15px;
+    margin-top: 8px;
+    background-color: #ffffff;
+    border-top: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 0.9em;
+}
+
+/* 当列表项被标记为展开时，显示详情面板 */
+.batch-results li.expanded .details-panel {
+    display: block;
+}
+
+/* 详情面板内的样式，复用已有的详情样式 */
+.details-panel .detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-family: sans-serif; /* 恢复为普通字体 */
+}
+.details-panel .label {
+    color: #6c757d;
+    margin-right: 1rem;
+}
+.details-panel .value {
+    font-weight: 500;
+    word-break: break-all;
+}
+.form-group-divider { text-align: center; margin: 1rem 0; color: #888; position: relative; }
+.form-group-divider::before, .form-group-divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background-color: #ddd; }
+.form-group-divider::before { left: 0; }
+.form-group-divider::after { right: 0; }
