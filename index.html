@@ -252,30 +252,73 @@ document.addEventListener('DOMContentLoaded', function() {
         if (details.user_type === 'special_auth') { 
              detailsHtml = `
                 <div class="detail-item"><span class="label">用户身份</span><span class="value highlight-special">特殊授权</span></div>
-                <div class="detail-item"><span class="label">电脑编号</span><span class="value">${details.computer_id}</span></div>
-                <div class="detail-item"><span class="label">绑定邮箱</span><span class="value">${details.email || 'N/A'}</span></div>
-                <div class="detail-item"><span class="label">授权码到期</span><span class="value">${details.generated_expire_date}</span></div>
-                <div class="detail-item"><span class="label">高级授权状态</span><span class="value highlight-green">${details.allowance_text}</span></div>
+                <div class="detail-item"><span class="label">电脑编号</span><span class="value">${escapeHTML(details.computer_id)}</span></div>
+                <div class="detail-item"><span class="label">绑定邮箱</span><span class="value">${escapeHTML(details.email) || 'N/A'}</span></div>
+                <div class="detail-item"><span class="label">授权码到期</span><span class="value">${escapeHTML(details.generated_expire_date)}</span></div>
+                <div class="detail-item"><span class="label">高级授权状态</span><span class="value highlight-green">${escapeHTML(details.allowance_text)}</span></div>
             `;
         } else if (details.formatted_remaining_changes_text) { 
             detailsHtml = `
-                <div class="detail-item"><span class="label">电脑编号</span><span class="value">${details.computer_id}</span></div>
-                <div class="detail-item"><span class="label">下单邮箱</span><span class="value">${details.email || 'N/A'}</span></div>
-                <div class="detail-item"><span class="label">购买套餐</span><span class="value">${details.bought_duration_text || 'N/A'}</span></div>
-                <div class="detail-item"><span class="label">授权码到期</span><span class="value">${details.generated_expire_date}</span></div>
-                <div class="detail-item"><span class="label">剩余更换次数</span><span class="value highlight">${details.formatted_remaining_changes_text}</span></div>
+                <div class="detail-item"><span class="label">电脑编号</span><span class="value">${escapeHTML(details.computer_id)}</span></div>
+                <div class="detail-item"><span class="label">下单邮箱</span><span class="value">${escapeHTML(details.email) || 'N/A'}</span></div>
+                <div class="detail-item"><span class="label">购买套餐</span><span class="value">${escapeHTML(details.bought_duration_text) || 'N/A'}</span></div>
+                <div class="detail-item"><span class="label">授权码到期</span><span class="value">${escapeHTML(details.generated_expire_date)}</span></div>
+                <div class="detail-item"><span class="label">剩余更换次数</span><span class="value highlight">${escapeHTML(details.formatted_remaining_changes_text)}</span></div>
             `;
         } else {
             detailsHtml = `
-                <div class="detail-item"><span class="label">电脑编号</span><span class="value">${details.computer_id}</span></div>
-                <div class="detail-item"><span class="label">授权码到期</span><span class="value">${details.generated_expire_date}</span></div>
+                <div class="detail-item"><span class="label">电脑编号</span><span class="value">${escapeHTML(details.computer_id)}</span></div>
+                <div class="detail-item"><span class="label">授权码到期</span><span class="value">${escapeHTML(details.generated_expire_date)}</span></div>
             `;
             if (details.bought_duration_text) {
-                detailsHtml += `<div class="detail-item"><span class="label">授权类型</span><span class="value">${details.bought_duration_text}</span></div>`;
+                detailsHtml += `<div class="detail-item"><span class="label">授权类型</span><span class="value">${escapeHTML(details.bought_duration_text)}</span></div>`;
             }
         }
-
-        resultContainer.innerHTML = `<div class="result-card success"><h3>授权码已生成</h3><div class="access-code-box" id="accessCodeBox"><div class="access-code-display">${data.access_code}</div><small class="copy-hint">点击上方授权码即可复制</small><div class="copy-feedback">已复制!</div></div><div class="details-divider">授权详情</div><div class="details-grid">${detailsHtml}</div></div>`;
+    
+        let supportHtml = '';
+        if (details.support_info && Object.keys(details.support_info).length > 0) {
+            const { contact, shop } = details.support_info;
+            
+            let contactInfo = '';
+            if (contact && contact.type && contact.type !== 'none' && contact.value) {
+                const typeMap = {'qq': 'QQ', 'wechat': '微信', 'text': '客服'};
+                const label = typeMap[contact.type.toLowerCase()] || escapeHTML(contact.type); 
+                contactInfo = `${label}: ${escapeHTML(contact.value)}`;
+            }
+    
+            let shopInfo = '';
+            if (shop && shop.url) {
+                const url = escapeHTML(shop.url);
+                const displayUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '');
+                const fullUrl = url.startsWith('http') ? url : `//${url}`;
+                shopInfo = `<a href="${fullUrl}" target="_blank" rel="noopener noreferrer">${displayUrl}</a>`;
+            }
+    
+            if (contactInfo || shopInfo) {
+                supportHtml = `<div class="details-divider">售后支持</div><div class="details-grid">`;
+                if (contactInfo) {
+                    supportHtml += `<div class="detail-item"><span class="label">客服联系</span><span class="value">${contactInfo}</span></div>`;
+                }
+                if (shopInfo) {
+                    supportHtml += `<div class="detail-item"><span class="label">店铺地址</span><span class="value">${shopInfo}</span></div>`;
+                }
+                supportHtml += `</div>`;
+            }
+        }
+    
+        resultContainer.innerHTML = `
+            <div class="result-card success">
+                <h3>授权码已生成</h3>
+                <div class="access-code-box" id="accessCodeBox">
+                    <div class="access-code-display">${escapeHTML(data.access_code)}</div>
+                    <small class="copy-hint">点击上方授权码即可复制</small>
+                    <div class="copy-feedback">已复制!</div>
+                </div>
+                <div class="details-divider">授权详情</div>
+                <div class="details-grid">${detailsHtml}</div>
+                ${supportHtml}
+            </div>
+        `;
     }
 
     function showError(message) { resultContainer.innerHTML = `<div class="result-card error"><h3>操作失败</h3><p>${message}</p></div>`; }
