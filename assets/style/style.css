@@ -36,7 +36,17 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+.input-tip.cdk-warning {
+    color: #d9534f; /* 醒目的红色 */
+    font-size: 13px;
+    margin-top: 8px;
+    display: block; /* 确保它独占一行 */
+    padding: 0 5px; /* 添加一点内边距，使其与输入框对齐 */
+}
 
+.input-tip.cdk-warning strong {
+    font-weight: 600; /* 加粗“注意”二字 */
+}
 /* --- 后续所有其他CSS规则保持不变 --- */
     .auth-mode-selector {
         display: flex;
